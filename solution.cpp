@@ -71,7 +71,7 @@ std::vector<File*> FileAVL::query(size_t min, size_t max) {
 
 void FileTrie::addFile(File* f){
     std::string name = f->getName();
-    if(name == ""){
+    if(name.empty()){
         return;
     }
     for(char c : name){
@@ -84,6 +84,7 @@ void FileTrie::addFile(File* f){
         temp->matching.insert(f);
         //Looping through the entire string 
         for(char c : name){
+            c = tolower(c);
             //Going to the FileTrieNode with Matching Char
             if(temp->next.find(c) != temp->next.end()){
                 temp = temp->next[c];
