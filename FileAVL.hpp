@@ -27,6 +27,8 @@ struct Node {
 class FileAVL {
    public:
 
+   std::vector<File*> getMin(Node* start, int val);
+   std::vector<File*> getMax(Node* start, int val);
     /**
     * @brief Retrieves all files in the FileAVL whose file sizes are within [min, max]
     * 
