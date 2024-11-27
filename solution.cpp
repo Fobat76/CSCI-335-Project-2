@@ -104,8 +104,8 @@ std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix
     auto temp = head;
     
     for(auto c : prefix){
-        if(temp->next.find(prefix[c]) != temp->next.end()){
-            temp = temp->next[prefix[c]];
+        if(temp->next.find(c) != temp->next.end()){
+            temp = temp->next[c];
         }
         else{
             return std::unordered_set<File*>();
