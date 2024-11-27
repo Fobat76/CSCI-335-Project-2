@@ -70,15 +70,19 @@ std::vector<File*> FileAVL::query(size_t min, size_t max) {
 }
 
 void FileTrie::addFile(File* f){
-    if(f->getName() == ""){ 
+    std::string name = f->getName();
+    if(name == ""){
         return;
     }
-    else{
+    for(char c : name){
+        if(!(isalpha(c)|| c== '.' || isdigit(c))){
+            return;
+        }
+    }
         auto temp = head;
         //Insert at Root ""
         temp->matching.insert(f);
         //Looping through the entire string 
-        std::string name = f->getName();
         for(char c : name){
             //Going to the FileTrieNode with Matching Char
             if(temp->next.find(c) != temp->next.end()){
@@ -92,7 +96,7 @@ void FileTrie::addFile(File* f){
             }
         }
         temp = nullptr;
-    }
+    
 }
 
 std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix) const{
