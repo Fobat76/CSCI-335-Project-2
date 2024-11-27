@@ -75,21 +75,21 @@ void FileTrie::addFile(File* f){
     }
     else{
         auto temp = head;
-        //Insert at Root 
+        //Insert at Root ""
         temp->matching.insert(f);
         //Looping through the entire string 
         std::string name = f->getName();
-        for(auto c : name){
+        for(char c : name){
             //Going to the FileTrieNode with Matching Char
             if(temp->next.find(c) != temp->next.end()){
                 temp = temp->next[c];
+                temp->matching.insert(f);
             }
             //Createa a new FileTrieNoe with Matching Char if it doesn't exist 
             else if(temp->next.find(c) == temp->next.end()) {
-                temp->next[c] = new FileTrieNode(c);
+                temp->next[c] = new FileTrieNode(c,f);
+                temp = temp->next[c];
             }
-            //insert into the matching member 
-            temp->matching.insert(f);
         }
         temp = nullptr;
     }
