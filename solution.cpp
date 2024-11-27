@@ -70,7 +70,7 @@ std::vector<File*> FileAVL::query(size_t min, size_t max) {
 }
 
 void FileTrie::addFile(File* f){
-    if(f->getName() == ""){
+    if(f->getName() == ""){ 
         return;
     }
     else{
@@ -85,8 +85,8 @@ void FileTrie::addFile(File* f){
                 temp = temp->next[c];
             }
             //Createa a new FileTrieNoe with Matching Char if it doesn't exist 
-            else{
-                temp->next[c] = new FileTrieNode(c,f);
+            else if(temp->next.find(c) == temp->next.end()) {
+                temp->next[c] = new FileTrieNode(c);
             }
             //insert into the matching member 
             temp->matching.insert(f);
