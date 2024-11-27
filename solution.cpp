@@ -69,11 +69,6 @@ std::vector<File*> FileAVL::query(size_t min, size_t max) {
     return getAscendORDescend(this->root_,min,max);
 }
 
-
-FileTrie::FileTrie(){
-    head = new FileTrieNode;
-}
-
 void FileTrie::addFile(File* f){
     if(f->getName() == ""){
         return;
