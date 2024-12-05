@@ -149,9 +149,14 @@ std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix
 }
 
 
+// FileTrie::~FileTrie(){
+//     //clear the map assuming we still want to keep all the files or else just a for each loop and calling the destructor for the File
+//     for(auto x: head->next){
+//         delete x;
+//     }
+// }
 FileTrie::~FileTrie(){
     //clear the map assuming we still want to keep all the files or else just a for each loop and calling the destructor for the File
-    for(auto x: head->next){
-        delete x;
-    }
+    FileTrieDestructor(head->next);
+    head->matching.clear();
 }
