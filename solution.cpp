@@ -69,6 +69,73 @@ std::vector<File*> FileAVL::query(size_t min, size_t max) {
     return getAscendORDescend(this->root_,min,max);
 }
 
+
+/*
+ ___________________________
+/ Part one before the extra \
+\ credit                    /
+ ---------------------------
+   \
+    \
+     \
+                '-.
+      .---._     \ .--'
+    /       `-..__)  ,-'
+   |    0           /
+    --.__,   .__.,`
+     `-.___'._\_.'
+
+*/
+// void FileTrie::addFile(File* f){
+//     std::string name = f->getName();
+//     if(name.empty()){
+//         return;
+//     }
+//     for(char c : name){
+//         if(!(isalpha(c)|| c== '.' || isdigit(c))){
+//             return;
+//         }
+//     }
+//         auto temp = head;
+//         //Insert at Root ""
+//         temp->matching.insert(f);
+//         //Looping through the entire string 
+//         for(char c : name){
+//             c = tolower(c);
+//             //Going to the FileTrieNode with Matching Char
+//             if(temp->next.find(c) != temp->next.end()){
+//                 temp = temp->next[c];
+//                 temp->matching.insert(f);
+//             }
+//             //Createa a new FileTrieNoe with Matching Char if it doesn't exist 
+//             else if(temp->next.find(c) == temp->next.end()) {
+//                 temp->next[c] = new FileTrieNode(c,f);
+//                 temp = temp->next[c];
+//             }
+//         }
+//         temp = nullptr;
+    
+// }
+
+// std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix) const{
+//     auto temp = head;
+    
+//     for(auto c : prefix){
+//         if(temp->next.find(c) != temp->next.end()){
+//             temp = temp->next[c];
+//         }
+//         else{
+//             return std::unordered_set<File*>();
+//         }
+//     }
+//     return temp->matching;
+// }
+
+/*                                      
+        _______________
+    < Extra Credit  >
+        ---------------
+*/                              
 void FileTrie::addFile(File* f){
     std::string name = f->getName();
     if(name.empty()){
@@ -86,14 +153,20 @@ void FileTrie::addFile(File* f){
         for(char c : name){
             c = tolower(c);
             //Going to the FileTrieNode with Matching Char
-            if(temp->next.find(c) != temp->next.end()){
+            bool foundc = false;
+            for(auto vec : temp->next){
+                if(vec->stored == c){
+                    foundc = true;
+                }
+            }
+            if(foundc){
                 temp = temp->next[c];
                 temp->matching.insert(f);
             }
             //Createa a new FileTrieNoe with Matching Char if it doesn't exist 
-            else if(temp->next.find(c) == temp->next.end()) {
-                temp->next[c] = new FileTrieNode(c,f);
-                temp = temp->next[c];
+            else{
+                temp->next.push_back(new FileTrieNode(c,f));
+                temp = (*temp->next.rend());
             }
         }
         temp = nullptr;
@@ -104,12 +177,48 @@ std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix
     auto temp = head;
     
     for(auto c : prefix){
-        if(temp->next.find(c) != temp->next.end()){
-            temp = temp->next[c];
-        }
-        else{
+        bool notfound = true;
+            for(auto vec : temp->next){
+                if(vec->stored == c){
+                    temp = vec;
+                    notfound = false;
+                    break;
+                }
+            }
+        if(notfound){
             return std::unordered_set<File*>();
         }
     }
     return temp->matching;
+}
+
+
+/**
+ * @brief remove all 
+ * @param A vector of std::vector<FileTrieNode*>
+ * @note Recursively call delete while the vector is full 
+ */
+inline void FileTrieDestructor(std::vector<FileTrieNode*> &head){
+     /**
+      * Base case
+      * Don't do anything since there is nothing
+     */
+    if(head.empty()){
+        return;
+    }
+    /**
+     * Not empty loop through vector and delete it 
+     */
+    else{
+        for(auto x : head){
+            FileTrieDestructor(x->next);
+            delete x;
+        }
+    }
+}
+
+FileTrie::~FileTrie(){
+    //clear the map assuming we still want to keep all the files or else just a for each loop and calling the destructor for the File
+    FileTrieDestructor(head->next);
+    head->matching.clear();
 }
