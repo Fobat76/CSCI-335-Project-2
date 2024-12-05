@@ -1,6 +1,6 @@
 #ifndef USE_VECTOR
 #define USE_VECTOR
-#endif
+
 
 /**
  * @file FileTrie.hpp
@@ -46,3 +46,4 @@ class FileTrie {
         // Destructor
         ~FileTrie();
 };
+#endif
