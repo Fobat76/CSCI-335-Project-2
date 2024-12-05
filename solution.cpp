@@ -56,6 +56,30 @@ inline std::vector<File*> getAscendORDescend(Node* start, int val1, int val2){
 }
 
 /**
+ * @brief remove all 
+ * @param A vector of std::vector<FileTrieNode*>
+ * @note Recursively call delete while the vector is full 
+ */
+inline void FileTrieDestructor(std::vector<FileTrieNode*> &head){
+     /**
+      * Base case
+      * Don't do anything since there is nothing
+     */
+    if(head.empty()){
+        return;
+    }
+    /**
+     * Not empty loop through vector and delete it 
+     */
+    else{
+        for(auto x : head){
+            FileTrieDestructor(x->next);
+            delete x;
+        }
+    }
+}
+
+/**
  * @brief Retrieves all files in the FileAVL whose file sizes are within [min, max]
  * 
  * @param min The min value of the file size query range.
@@ -125,32 +149,9 @@ std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix
 }
 
 
-/**
- * @brief remove all 
- * @param A vector of std::vector<FileTrieNode*>
- * @note Recursively call delete while the vector is full 
- */
-inline void FileTrieDestructor(std::vector<FileTrieNode*> &head){
-     /**
-      * Base case
-      * Don't do anything since there is nothing
-     */
-    if(head.empty()){
-        return;
-    }
-    /**
-     * Not empty loop through vector and delete it 
-     */
-    else{
-        for(auto x : head){
-            FileTrieDestructor(x->next);
-            delete x;
-        }
-    }
-}
-
 FileTrie::~FileTrie(){
     //clear the map assuming we still want to keep all the files or else just a for each loop and calling the destructor for the File
-    FileTrieDestructor(head->next);
-    head->matching.clear();
+    for(auto x: head->next){
+        delete x;
+    }
 }
