@@ -123,7 +123,7 @@ void FileTrie::addFile(File* f){
             //Createa a new FileTrieNoe with Matching Char if it doesn't exist 
             if(notfound){
                 temp->next.push_back(new FileTrieNode(c,f));
-                temp = (*temp->next.rend());
+                temp = (temp->next.back());
             }
         }
         temp = nullptr;
