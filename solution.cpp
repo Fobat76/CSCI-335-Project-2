@@ -69,79 +69,14 @@ std::vector<File*> FileAVL::query(size_t min, size_t max) {
     return getAscendORDescend(this->root_,min,max);
 }
 
-
-/*
- ___________________________
-/ Part one before the extra \
-\ credit                    /
- ---------------------------
-   \
-    \
-     \
-                '-.
-      .---._     \ .--'
-    /       `-..__)  ,-'
-   |    0           /
-    --.__,   .__.,`
-     `-.___'._\_.'
-
-*/
-// void FileTrie::addFile(File* f){
-//     std::string name = f->getName();
-//     if(name.empty()){
-//         return;
-//     }
-//     for(char c : name){
-//         if(!(isalpha(c)|| c== '.' || isdigit(c))){
-//             return;
-//         }
-//     }
-//         auto temp = head;
-//         //Insert at Root ""
-//         temp->matching.insert(f);
-//         //Looping through the entire string 
-//         for(char c : name){
-//             c = tolower(c);
-//             //Going to the FileTrieNode with Matching Char
-//             if(temp->next.find(c) != temp->next.end()){
-//                 temp = temp->next[c];
-//                 temp->matching.insert(f);
-//             }
-//             //Createa a new FileTrieNoe with Matching Char if it doesn't exist 
-//             else if(temp->next.find(c) == temp->next.end()) {
-//                 temp->next[c] = new FileTrieNode(c,f);
-//                 temp = temp->next[c];
-//             }
-//         }
-//         temp = nullptr;
-    
-// }
-
-// std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix) const{
-//     auto temp = head;
-    
-//     for(auto c : prefix){
-//         if(temp->next.find(c) != temp->next.end()){
-//             temp = temp->next[c];
-//         }
-//         else{
-//             return std::unordered_set<File*>();
-//         }
-//     }
-//     return temp->matching;
-// }
-
-/*                                      
-        _______________
-    < Extra Credit  >
-        ---------------
-*/                              
+                          
 void FileTrie::addFile(File* f){
     std::string name = f->getName();
     if(name.empty()){
         return;
     }
     for(char c : name){
+        //File name is illegal 
         if(!(isalpha(c)|| c== '.' || isdigit(c))){
             return;
         }
@@ -152,25 +87,22 @@ void FileTrie::addFile(File* f){
         //Looping through the entire string 
         for(char c : name){
             c = tolower(c);
-            //Going to the FileTrieNode with Matching Char
-            bool foundc = false;
+            //Going to the FileTrieNode_Next with Matching Char
+            bool notfound = true;
             for(auto vec : temp->next){
                 if(vec->stored == c){
-                    foundc = true;
+                    temp = vec;
+                    temp->matching.insert(f);
+                    notfound = false;
                 }
             }
-            if(foundc){
-                temp = temp->next[c];
-                temp->matching.insert(f);
-            }
             //Createa a new FileTrieNoe with Matching Char if it doesn't exist 
-            else{
+            if(notfound){
                 temp->next.push_back(new FileTrieNode(c,f));
                 temp = (*temp->next.rend());
             }
         }
         temp = nullptr;
-    
 }
 
 std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix) const{
@@ -178,13 +110,13 @@ std::unordered_set<File*> FileTrie::getFilesWithPrefix(const std::string& prefix
     
     for(auto c : prefix){
         bool notfound = true;
-            for(auto vec : temp->next){
-                if(vec->stored == c){
-                    temp = vec;
-                    notfound = false;
-                    break;
-                }
+        for(auto vec : temp->next){
+            if(vec->stored == c){
+                temp = vec;
+                notfound = false;
+                break;
             }
+        }
         if(notfound){
             return std::unordered_set<File*>();
         }
